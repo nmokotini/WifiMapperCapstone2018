@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WifiMapper</string>
+    <string name="title_activity_wifi_app">Map</string>
+</resources>
