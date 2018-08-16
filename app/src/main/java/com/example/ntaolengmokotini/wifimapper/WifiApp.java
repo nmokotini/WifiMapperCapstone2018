@@ -23,6 +23,9 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.tasks.Task;
 
 
@@ -48,8 +51,15 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_app);
+
+        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
+            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
+            // is not null.
+            mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         startLocationUpdates();
@@ -91,14 +101,19 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         if (location == null) {
             return;
         }
-        else {
-            latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        }
+
+        mCurrentLocation = location;
+
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelable(KEY_LOCATION, mCurrentLocation);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @SuppressWarnings({"MissingPermission"})
     public void getLastLocation() {
-
+    mMap.setMyLocationEnabled(true);
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -117,7 +132,6 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
                     }
                 });*/
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -139,7 +153,7 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         //calculate signal level based on  RSSI levels
         int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);*/
         getLastLocation();
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Computer Science Building"));
+        mMap.addMarker(new MarkerOptions().position(latLng).title("Location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
@@ -152,6 +166,15 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         super.onStart();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mCurrentLocation != null) {
+            LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        }
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+        mMap.animateCamera(cameraUpdate);
+    }
     /*
      * Called when the Activity is no longer visible.
      */
