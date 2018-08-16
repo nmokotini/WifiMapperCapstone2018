@@ -23,10 +23,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.tasks.Task;
 
 
 import android.net.wifi.WifiInfo;
@@ -40,8 +37,8 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     private SupportMapFragment mapFragment;
     private LocationRequest mLocationRequest;
     Location mCurrentLocation;
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private long UPDATE_INTERVAL = 10000;  //10 secs
+    private long FASTEST_INTERVAL = 2000; // 2 secs
     private LatLng latLng;
 
     private final static String KEY_LOCATION = "location";
@@ -101,9 +98,7 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         if (location == null) {
             return;
         }
-
         mCurrentLocation = location;
-
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -170,7 +165,7 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     protected void onResume() {
         super.onResume();
         if (mCurrentLocation != null) {
-            LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         }
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
         mMap.animateCamera(cameraUpdate);
