@@ -34,10 +34,14 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    private SupportMapFragment mapFragment;
     private LocationRequest mLocationRequest;
+    Location mCurrentLocation;
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
     private LatLng latLng;
+
+    private final static String KEY_LOCATION = "location";
 
 
     @Override
