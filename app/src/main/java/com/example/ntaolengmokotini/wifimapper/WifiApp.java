@@ -130,6 +130,20 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
                     }
                 });
     }*/
+
+     public String getWifiStrength(){
+             WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+             //List<WifiConfiguration> configs = wifiManager.getConfigureNetworks();
+             //wifiManager.addNetwork((WifiConfiguration) configs);
+
+             //set number of RSSI Levels
+             final int rssiLevels = 5;
+             //calculate signal level based on  RSSI levels
+             int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);
+             String strWifiInfo = "Wifi Strength: " + wifiStrength + "/" + rssiLevels;
+             return strWifiInfo;
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -141,22 +155,8 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        //List<WifiConfiguration> configs = wifiManager.getConfiguredNetworks();
-        //wifiManager.addNetwork((WifiConfiguration) configs);
-
-
-
-        //set number of RSSI Levels
-        final int rssiLevels = 5;
-        //calculate signal level based on  RSSI levels
-        int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);
-        String strWifiInfo = "Wifi Strength: " + wifiStrength + " of " + rssiLevels;
-
-        
         LatLng latLng = new LatLng(-33.956818038110015,18.461076503153894);
-        mMap.addMarker(new MarkerOptions().position(latLng).title("CSC Building:"+strWifiInfo));
+        mMap.addMarker(new MarkerOptions().position(latLng).title("CSC Building:"+getWifiStrength()));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
