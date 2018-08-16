@@ -1,12 +1,14 @@
 package com.example.ntaolengmokotini.wifimapper;
 
 import android.Manifest;
+import java.util.*;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.location.LocationManager;
 import android.os.Looper;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,7 +29,9 @@ import com.google.android.gms.maps.CameraUpdate;
 
 
 import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.widget.TextView;
 
 
 public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
@@ -39,7 +43,7 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     Location mCurrentLocation;
     private long UPDATE_INTERVAL = 10000;  //10 secs
     private long FASTEST_INTERVAL = 2000; // 2 secs
-    private LatLng latLng;
+
 
     private final static String KEY_LOCATION = "location";
 
@@ -49,22 +53,21 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_app);
 
-        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
+        /*if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
             // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-        }
-
+        }*/
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        startLocationUpdates();
+        //startLocationUpdates();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
     }
-    @SuppressWarnings({"MissingPermission"})
+    /*@SuppressWarnings({"MissingPermission"})
     private void startLocationUpdates() {
         // Create the location request to start receiving updates
         mLocationRequest = new LocationRequest();
@@ -119,14 +122,14 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
                         }
                     }
                 });
-                /*.addOnFailureListener(new OnFailureListener() {
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("MapDemoActivity", "Error trying to get last GPS location");
                         e.printStackTrace();
                     }
-                });*/
-    }
+                });
+    }*/
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -138,17 +141,22 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        /*
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        //List<WifiConfiguration> configs = wifiManager.getConfiguredNetworks();
+        //wifiManager.addNetwork((WifiConfiguration) configs);
+
+
 
         //set number of RSSI Levels
         final int rssiLevels = 5;
         //calculate signal level based on  RSSI levels
-        int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);*/
-        getLastLocation();
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Location"));
+        int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);
+        String strWifiInfo = "Wifi Strength: " + wifiStrength + " of " + rssiLevels;
+
+        
+        LatLng latLng = new LatLng(-33.956818038110015,18.461076503153894);
+        mMap.addMarker(new MarkerOptions().position(latLng).title("CSC Building:"+strWifiInfo));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
@@ -156,7 +164,7 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     /*
      * Called when the Activity becomes visible.
      */
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
     }
@@ -167,16 +175,17 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         if (mCurrentLocation != null) {
             latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         }
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-        mMap.animateCamera(cameraUpdate);
     }
+    */
+
     /*
      * Called when the Activity is no longer visible.
      */
+    /*
     @Override
     protected void onStop() {
         super.onStop();
-    }
+    }*/
 
 
 }
