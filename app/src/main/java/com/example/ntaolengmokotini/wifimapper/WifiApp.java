@@ -53,7 +53,7 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
 
 
     }
-
+    @SuppressWarnings({"MissingPermission"})
     private void startLocationUpdates() {
         // Create the location request to start receiving updates
         mLocationRequest = new LocationRequest();
@@ -71,17 +71,8 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Task<Void> voidTask = mFusedLocationClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
+
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
                         // do work here
@@ -93,21 +84,17 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
 
     public void onLocationChanged(Location location) {
         // You can now create a LatLng Object for use with maps
-         latLng = new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-    public void getLastLocation() {
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (location == null) {
             return;
         }
+        else {
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    public void getLastLocation() {
+
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -139,11 +126,6 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
-
-
-
-
         /*
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
@@ -152,10 +134,26 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         final int rssiLevels = 5;
         //calculate signal level based on  RSSI levels
         int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);*/
-
-
+        getLastLocation();
         mMap.addMarker(new MarkerOptions().position(latLng).title("Computer Science Building"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+
+    /*
+     * Called when the Activity becomes visible.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    /*
+     * Called when the Activity is no longer visible.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
 
