@@ -50,25 +50,24 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private SupportMapFragment mapFragment;
-    private LocationRequest mLocationRequest;
-    Location mCurrentLocation;
-    private long UPDATE_INTERVAL = 10000;  //10 secs
-    private long FASTEST_INTERVAL = 2000; // 2 secs
-
-
-    private final static String KEY_LOCATION = "location";
+    //private LocationRequest mLocationRequest;
+    //Location mCurrentLocation;
+    //private long UPDATE_INTERVAL = 10000;  //10 secs
+    //private long FASTEST_INTERVAL = 2000; // 2 secs
+    //private final static String KEY_LOCATION = "location";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi_app);
+        setContentView(R.layout.activity_wifi_app);// creates the layout of the screen
 
         /*if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
             // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }*/
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -141,17 +140,19 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
                     }
                 });
     }*/
-
-     public String getWifiStrength(){
+    /*
+    Calculates the strength of the WIFI signal
+     */
+    public String getWifiStrength(){
              WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+             WifiInfo wifiInfo = wifiManager.getConnectionInfo();//obtains information about wifi connection ( including the rssi)
              //List<WifiConfiguration> configs = wifiManager.getConfigureNetworks();
              //wifiManager.addNetwork((WifiConfiguration) configs);
 
-             //set number of RSSI Levels
+             // sets levels out of which the RSSI signal level will be calculated
              final int rssiLevels = 5;
              //calculate signal level based on  RSSI levels
-             int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);
+             int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels)
              String strWifiInfo = "Wifi Strength: " + wifiStrength + "/" + rssiLevels;
              return strWifiInfo;
     }
@@ -165,9 +166,13 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //initializes the map object
         mMap = googleMap;
+        // creates a Latlng object based on location's latitude & longitude value
         LatLng latLng = new LatLng(-33.956818038110015,18.461076503153894);
+        //adds map marker based on location
         mMap.addMarker(new MarkerOptions().position(latLng).title("CSC Building:"+getWifiStrength()));
+        //moves map camera zoom to location of the marker
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
@@ -211,33 +216,6 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
 
 
 
-
-
-    /*
-     * Called when the Activity becomes visible.
-     */
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mCurrentLocation != null) {
-            latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        }
-    }
-    */
-
-    /*
-     * Called when the Activity is no longer visible.
-     */
-    /*
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }*/
 
 
 }
