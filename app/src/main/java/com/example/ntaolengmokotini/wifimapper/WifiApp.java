@@ -10,6 +10,15 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.location.LocationManager;
 import android.os.Looper;
+import android.os.AsyncTask;
+import com.loopj.android.http.*;
+import org.json.*;
+
+ import java.io.IOException;
+ import java.io.InputStream;
+ 
+
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,8 +42,10 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.widget.TextView;
 
+import cz.msebera.android.httpclient.HttpHeaders;
 
-public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
+
+public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -159,6 +170,47 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(latLng).title("CSC Building:"+getWifiStrength()));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
+
+    public void GET() throws JSONException {
+
+        RestClient.get("http://196.24.186.131:8080/", null,new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, HttpHeaders[] headers, JSONObject response) {
+                //for a JSON Object
+            }
+            @Override
+            public void onSuccess(int statusCode, HttpHeaders[] headers, JSONArray pointers) throws JSONException {
+                   JSONObject pointer = (JSONObject) pointers.get(0);
+
+
+            }
+            });
+
+    }
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /*
