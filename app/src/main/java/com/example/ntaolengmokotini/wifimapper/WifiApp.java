@@ -75,7 +75,6 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
         //startLocationUpdates();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
     }
     /*@SuppressWarnings({"MissingPermission"})
     private void startLocationUpdates() {
@@ -140,6 +139,7 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
                     }
                 });
     }*/
+
     /*
     Calculates the strength of the WIFI signal
      */
@@ -152,11 +152,33 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
              // sets levels out of which the RSSI signal level will be calculated
              final int rssiLevels = 5;
              //calculate signal level based on  RSSI levels
-             int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels)
+             int wifiStrength = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), rssiLevels);
              String strWifiInfo = "Wifi Strength: " + wifiStrength + "/" + rssiLevels;
              return strWifiInfo;
     }
-    /**
+    /*
+    Obtains data JSON data from the database throw the use of the API
+     */
+    /*public void GET() throws JSONException {
+
+        RestClient.get("http://196.24.186.131:8080/", null,new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, HttpHeaders[] headers, JSONObject response) {
+                //for a JSON Object
+            }
+            //for JSON arrays
+            @Override
+            public void onSuccess(int statusCode, HttpHeaders[] headers, JSONArray pointers) throws JSONException {
+                   JSONObject pointer = (JSONObject) pointers.get(0);
+            }
+            });
+
+    }
+    */
+
+
+                                                                                                                          /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
@@ -175,27 +197,6 @@ public class WifiApp extends FragmentActivity implements OnMapReadyCallback{
         //moves map camera zoom to location of the marker
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
-
-    public void GET() throws JSONException {
-
-        RestClient.get("http://196.24.186.131:8080/", null,new JsonHttpResponseHandler(){
-
-            @Override
-            public void onSuccess(int statusCode, HttpHeaders[] headers, JSONObject response) {
-                //for a JSON Object
-            }
-            @Override
-            public void onSuccess(int statusCode, HttpHeaders[] headers, JSONArray pointers) throws JSONException {
-                   JSONObject pointer = (JSONObject) pointers.get(0);
-
-
-            }
-            });
-
-    }
-
-    
-
 
 
 
